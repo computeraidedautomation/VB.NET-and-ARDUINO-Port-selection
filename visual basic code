@@ -1,0 +1,51 @@
+' do not forget to add combo box and buttons
+Imports System
+Imports System.IO.Ports
+
+Public Class Form1
+    Dim comPORT As String
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        comPORT = ""
+        For Each sp As String In My.Computer.Ports.SerialPortNames
+            ComboBox1.Items.Add(sp)
+        Next
+        SerialPort1.Close()
+    End Sub
+    Private Sub ComboBox1_SelectedIndexChanged(ByVal sender As Object, ByVal e As EventArgs) Handles ComboBox1.SelectedIndexChanged
+        If (ComboBox1.SelectedItem <> "") Then
+            comPORT = ComboBox1.SelectedItem
+        End If
+    End Sub
+    Private Sub Button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Button1.Click
+        If (Button1.Text = "Connect") Then
+            If (comPORT <> "") Then
+                SerialPort1.PortName = comPORT
+                SerialPort1.BaudRate = 9600
+                SerialPort1.DataBits = 8
+                SerialPort1.Parity = Parity.None
+                SerialPort1.StopBits = StopBits.One
+                SerialPort1.Handshake = Handshake.None
+                SerialPort1.Encoding = System.Text.Encoding.Default
+                SerialPort1.ReadTimeout = 10000
+                Button1.Text = "Dis-connect"
+            Else
+                MsgBox("Select a COM port first")
+            End If
+        Else
+            SerialPort1.Close()
+            Button1.Text = "Connect"
+        End If
+    End Sub
+    Private Sub Button2_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button2.Click
+        SerialPort1.Open()
+        SerialPort1.Write("1")
+        SerialPort1.Close()
+    End Sub
+
+    Private Sub Button3_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Button3.Click
+        SerialPort1.Open()
+        SerialPort1.Write("0")
+        SerialPort1.Close()
+    End Sub
+
+End Class
